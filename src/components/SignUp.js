@@ -2,36 +2,36 @@ import React, { useRef, useState } from 'react';
 import { Modal, Form, Button, Alert } from 'react-bootstrap';
 import student from '../images/student.png'
 import teacher from '../images/teacher.png'
-// import { useAuth } from '../contexts/AuthContext'
+import { useAuth } from '../contexts/AuthContext'
 
 export default function SignUp() {
     const [showForm, setShowForm] = useState(false);
-    //     const [error, setError] = useState('');
-    //     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
     const openForm = () => setShowForm(true);
     const closeForm = () => setShowForm(false);
     const emailRef = useRef();
     const passwordRef = useRef();
     const passwordConfirmRef = useRef();
-    //     const { signUp } = useAuth();
+    const { signUp } = useAuth();
 
-    // async function handleSubmit(e) {
-    // e.preventDefault();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-    // if (passwordRef.current.value !== passwordConfirmRef.current.value) {
-    //     return setError("Passwords do not match");
-    // }
+        if (passwordRef.current.value !== passwordConfirmRef.current.value) {
+            return setError("Passwords do not match");
+        }
 
-    // try {
-    //     setError('');
-    //     setLoading(true);
-    //     await signUp(emailRef.current.value, passwordRef.current.value);
-    //     closeForm();
-    // } catch (err) {
-    //     setError('Failed to create an acount');
-    // }
-    // setLoading(false);
-    // }
+        try {
+            setError('');
+            setLoading(true);
+            await signUp(emailRef.current.value, passwordRef.current.value);
+            closeForm();
+        } catch (err) {
+            setError('Failed to create an acount');
+        }
+        setLoading(false);
+    }
 
     return (
         <div>
@@ -41,7 +41,7 @@ export default function SignUp() {
                     <Modal.Title>Sign Up</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {/* {error && <Alert variant='danger'>{error}</Alert>} */}
+                    {error && <Alert variant='danger'>{error}</Alert>}
                     <Form>
                         <Form.Group>
                             <Form.Label>Email</Form.Label>
@@ -80,8 +80,7 @@ export default function SignUp() {
                             <Form.Label>Confirm Password</Form.Label>
                             <Form.Control type='password' ref={passwordConfirmRef} required></Form.Control>
                         </Form.Group>
-                        <Button className='w-100 text-center mt-3'>Sign Up</Button>
-                        {/* disabled={loading} */}
+                        <Button onClick={handleSubmit} disabled={loading} className='w-100 text-center mt-3'>Sign Up</Button>
                     </Form>
                 </Modal.Body>
                 <div className='w-100 text-center mt-2 mb-2'>
