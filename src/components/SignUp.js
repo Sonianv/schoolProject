@@ -17,10 +17,22 @@ export default function SignUp() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if (passwordRef.current.value !== passwordConfirmRef.current.value) {
+        const student = document.getElementById("student_button");
+        const teacher = document.getElementById("teacher_button");
+        // student.addEventListener("click", () => {
+        //     console.log('hello');
+        // });
+        if (student.clicked == true) {
+            console.log('hello');
+        }
+        if (passwordRef.current.value === '' || passwordConfirmRef.current.value === '' || emailRef.current.value === '') {
+            return setError("Please fill in all fields");
+        } else if (passwordRef.current.value !== passwordConfirmRef.current.value) {
             return setError("Passwords do not match");
         }
+
+        // if (true) {
+        //     return setError("Please select your role");
 
         try {
             setError('');
@@ -52,7 +64,7 @@ export default function SignUp() {
                             <div className='container'>
                                 <div className='row btn-toolbar' role="toolbar" aria-label="Toolbar with button groups">
                                     <div className='col'>
-                                        <button type="button" className="btn btn-secondary image_button float-end btn-group" role="group">
+                                        <button id="student_button" type="button" className="btn btn-secondary image_button float-end btn-group" role="group">
                                             <img
                                                 src={student}
                                                 width="160"
@@ -61,7 +73,7 @@ export default function SignUp() {
                                         </button>
                                     </div>
                                     <div className='col'>
-                                        <button type="button" className="btn btn-secondary image_button btn-group" role="group">
+                                        <button id="teacher_button" type="button" className="btn btn-secondary image_button btn-group" role="group">
                                             <img
                                                 src={teacher}
                                                 width="160"
