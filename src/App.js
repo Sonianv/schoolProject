@@ -1,11 +1,17 @@
 import Home from './pages/home';
 import './App.css';
+import Navbar from './components/Navbar';
+// import { AuthProvider } from './contexts/AuthContext';
 
 function App() {
   return (
-    <div className="App">
-      <Home />
+    // <AuthProvider>
+    <div>
+      <Navbar />
     </div>
+    // </AuthProvider>
+
+
   );
 }
 
