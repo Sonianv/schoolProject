@@ -14,8 +14,27 @@ export const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const signUp = (email, password) => {
-        return createUserWithEmailAndPassword(auth, email, password);
+    const signUp = async (email, password, role) => {
+        try {
+            const res = await createUserWithEmailAndPassword(auth, email, password);
+            const user = res.user;
+            await
+            addDoc(collection(firestore, "users"), {
+                uid: user.uid,
+                role: role,
+                email: email, 
+            });
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
+    const logIn = async (email, password) => {
+        return signInWithEmailAndPassword(auth, email, password);
+    }
+
+    const logOut = () => {
+        signOut(auth);
     }
 
     useEffect(() => {
@@ -29,7 +48,9 @@ export const AuthProvider = ({ children }) => {
 
     const value = {
         currentUser,
-        signUp
+        logIn,
+        signUp,
+        logOut
     }
 
     return (

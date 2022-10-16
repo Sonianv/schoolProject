@@ -1,17 +1,21 @@
-import Home from './pages/home';
 import './App.css';
 import Navbar from './components/Navbar';
 import { AuthProvider } from './contexts/AuthContext';
+import { BrowserRouter as Router } from "react-router-dom";
+import {RoutesContext} from './contexts/RoutesContext';
 
 function App() {
   return (
-    <AuthProvider>
-      <div>
-        <Navbar />
-      </div>
-    </AuthProvider>
-
-
+    <div>
+      <AuthProvider>
+        <Router>
+        <div>
+          <Navbar />
+        </div>
+          <RoutesContext/>
+        </Router>
+      </AuthProvider>
+    </div>
   );
 }
 

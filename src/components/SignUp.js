@@ -1,8 +1,9 @@
 import React, { useRef, useState } from 'react';
 import { Modal, Form, Button, Alert } from 'react-bootstrap';
-import student from '../images/student.png'
-import teacher from '../images/teacher.png'
-import { useAuth } from '../contexts/AuthContext'
+import student from '../images/student.png';
+import teacher from '../images/teacher.png';
+import { useAuth } from '../contexts/AuthContext';
+import { useNavigate } from "react-router-dom";
 
 export default function SignUp() {
     const [showForm, setShowForm] = useState(false);
@@ -14,31 +15,43 @@ export default function SignUp() {
     const passwordRef = useRef();
     const passwordConfirmRef = useRef();
     const { signUp } = useAuth();
+    const navigate = useNavigate();
+    var role = "";
+
+    const saveRole = () => {
+
+        const student = document.getElementById("student_button");
+        const teacher = document.getElementById("teacher_button");
+
+        student.addEventListener("click", () => {
+            role = "student";
+        });
+        teacher.addEventListener("click", () => {
+            role = "teacher";
+        });
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const student = document.getElementById("student_button");
-        const teacher = document.getElementById("teacher_button");
-        // student.addEventListener("click", () => {
-        //     console.log('hello');
-        // });
-        if (student.clicked == true) {
-            console.log('hello');
-        }
+
         if (passwordRef.current.value === '' || passwordConfirmRef.current.value === '' || emailRef.current.value === '') {
             return setError("Please fill in all fields");
         } else if (passwordRef.current.value !== passwordConfirmRef.current.value) {
             return setError("Passwords do not match");
+        } else if (passwordRef.current.value.length < 6) {
+            return setError("Password should be at least 6 characters");
         }
 
-        // if (true) {
-        //     return setError("Please select your role");
+        if (role.length == 0) {
+            return setError("Please select your role");
+        }
 
         try {
             setError('');
             setLoading(true);
-            await signUp(emailRef.current.value, passwordRef.current.value);
+            await signUp(emailRef.current.value, passwordRef.current.value, role);
             closeForm();
+            navigate("/dashboard");
         } catch (err) {
             setError('Failed to create an acount');
         }
@@ -64,7 +77,7 @@ export default function SignUp() {
                             <div className='container'>
                                 <div className='row btn-toolbar' role="toolbar" aria-label="Toolbar with button groups">
                                     <div className='col'>
-                                        <button id="student_button" type="button" className="btn btn-secondary image_button float-end btn-group" role="group">
+                                        <button onClick={saveRole} id="student_button" type="button" className="btn btn-secondary image_button float-end btn-group" role="group">
                                             <img
                                                 src={student}
                                                 width="160"
@@ -73,7 +86,7 @@ export default function SignUp() {
                                         </button>
                                     </div>
                                     <div className='col'>
-                                        <button id="teacher_button" type="button" className="btn btn-secondary image_button btn-group" role="group">
+                                        <button onClick={saveRole} id="teacher_button" type="button" className="btn btn-secondary image_button btn-group" role="group">
                                             <img
                                                 src={teacher}
                                                 width="160"
@@ -93,11 +106,12 @@ export default function SignUp() {
                             <Form.Control type='password' ref={passwordConfirmRef} required></Form.Control>
                         </Form.Group>
                         <Button onClick={handleSubmit} disabled={loading} className='w-100 text-center mt-3'>Sign Up</Button>
+
                     </Form>
                 </Modal.Body>
-                <div className='w-100 text-center mt-2 mb-2'>
+                {/* <div className='w-100 text-center mt-2 mb-2'>
                     Already have an account? Log In
-                </div>
+                </div> */}
             </Modal>
         </div>
     )
