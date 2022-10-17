@@ -19,11 +19,10 @@ export const AuthProvider = ({ children }) => {
             const res = await createUserWithEmailAndPassword(auth, email, password);
             const user = res.user;
             await
-            addDoc(collection(firestore, "users"), {
-                uid: user.uid,
-                role: role,
-                email: email, 
-            });
+                addDoc(collection(firestore, "users"), {
+                    role: role,
+                    email: email,
+                });
         } catch (e) {
             console.error(e);
         }
