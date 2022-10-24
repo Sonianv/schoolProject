@@ -15,6 +15,7 @@ export default function LogIn() {
     const { logIn } = useAuth();
     const navigate = useNavigate();
 
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -52,9 +53,6 @@ export default function LogIn() {
 
                     </Form>
                 </Modal.Body>
-                {/* <div className='w-100 text-center mt-2 mb-2'>
-                    Need an account? 
-                </div> */}
             </Modal>
         </div>
     )

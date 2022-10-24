@@ -28,23 +28,9 @@ export default function Navbar() {
             />
           </a>
           <div>
-            {/* <!-- Left links --> */}
-            {/* <ul className="navbar-nav me-auto">
-              <li className="nav-item">
-                <a className="nav-link" href="#">Dashboard</a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#">Team</a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#">Projects</a>
-              </li>
-            </ul> */}
-            {/* <!-- Left links --> */}
           </div>
         </div>
 
-        {/* <!-- Right elements --> */}
         <div className='d-flex align-items-center'>
           {currentUser ? (
             <>
@@ -62,9 +48,7 @@ export default function Navbar() {
             </>
           )}
         </div>
-        {/* <!-- Right elements --> */}
       </div>
-      {/* <!-- Container wrapper --> */}
     </nav>
   )
 }

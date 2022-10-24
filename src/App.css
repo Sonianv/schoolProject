@@ -52,3 +52,38 @@
 .image_button {
     padding: 0% !important;
 }
+
+.myBackground {
+    background-image: url('../src/images/background.webp');
+        height: 78vh;
+}
+
+.myFooter {
+    background-color: rgba(0,0,0, 0.2);
+    font-weight: bold;
+}
+
+.content {
+    background-color: rgb(255, 255, 255);
+    background-image: none;
+    height: 100%;
+}
+
+.class {
+    height: 160px;
+    width: 160px;
+    text-align: center;
+    border: 3px #1e7f39 solid;
+}
+
+.title {
+    font-weight: 600;
+    text-align: left;
+    color:#1e7f39;
+}
+
+.greenText {
+    font-weight: 600;
+    color: #1e7f39;
+}
+

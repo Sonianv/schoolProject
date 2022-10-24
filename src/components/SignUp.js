@@ -18,6 +18,7 @@ export default function SignUp() {
     const navigate = useNavigate();
     var role = "";
 
+
     const saveRole = () => {
 
         const student = document.getElementById("student_button");
@@ -32,6 +33,7 @@ export default function SignUp() {
     }
 
     const handleSubmit = async (e) => {
+
         e.preventDefault();
 
         if (passwordRef.current.value === '' || passwordConfirmRef.current.value === '' || emailRef.current.value === '') {
