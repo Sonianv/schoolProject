@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { Modal, Form, Button, Alert } from 'react-bootstrap';
 import { useAuth } from '../../contexts/AuthContext';
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc } from "firebase/firestore";
 import { firestore } from "../../firebase";
 import { FirebaseContext } from '../../contexts/FirebaseContext';
 
@@ -17,13 +17,33 @@ export default function TeacherExercises() {
 
     const myExercises = [];
     FirebaseContext("exercises", "teacher", currentUser.email, myExercises, "exercise");
+    const ids = [];
+    FirebaseContext("exercises", "teacher", currentUser.email, ids, "id");
     const exercisesRender = [];
+
+    async function deleteEx() {
+
+        const docRef = doc(firestore, 'exercises', ids[0]);
+        deleteDoc(docRef);
+    };
+
+    const deleteExercise = async (e) => {
+        e.preventDefault()
+        try {
+            deleteEx();
+
+        } catch (err) {
+            console.log(err);
+        }
+
+    }
 
     for (let i = 0; i < myExercises.length; i++) {
         exercisesRender.push(
-            <div className="p-2 bg-light mb-2 row h-50">
-                <p className='col-11'>{myExercises[i]}</p>
-                <button className='btn btn-success col-1'>Post</button>
+            <div className="p-2 bg-light mb-2 h-50 d-flex align-items-center">
+                <p className='col-9'>{myExercises[i]}</p>
+                <button className='btn btn-success me-2 ms-5'>Post</button>
+                <button className='btn btn-danger me-4' onClick={deleteExercise}>Delete</button>
             </div>
         );
     }
@@ -52,11 +72,11 @@ export default function TeacherExercises() {
 
     return (
         <>
-            <div className="d-flex flex-column">
+            <div className="d-flex flex-column p-0">
                 {exercisesRender}
             </div>
             <div className="d-flex flex-row-reverse p-2">
-                <button type="button" className="btn btn-info text-white mb-4 col-1 w-25" onClick={openForm}>New Exercise</button>
+                <button type="button" className="btn btn-info text-white mb-4 me-4 w-25" onClick={openForm}>New Exercise</button>
             </div>
             <Modal centered show={showForm} onHide={closeForm}>
                 <Modal.Header>

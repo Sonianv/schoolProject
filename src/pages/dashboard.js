@@ -10,8 +10,9 @@ export default function Dashboard() {
     const user = [];
     FirebaseContext("users", "email", currentUser.email, user, "role");
 
-    const uids = [];
-    FirebaseContext("users", "email", currentUser.email, uids, "uid");
+    // const uids = [];
+    // FirebaseContext("users", "email", currentUser.email, uids, "uid");
+    // console.log(uids);
 
 
     return (

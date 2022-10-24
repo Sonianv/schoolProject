@@ -27,7 +27,7 @@ export function FirebaseContext(collectionName, field, expectedValue, data, extr
             {value && (
                 <span>
                     {value.docs.map((doc) => (
-                        addData(doc.get(extractedField))
+                        addData((extractedField == "id") ? (doc.id) : (doc.get(extractedField)))
                     ))}
                 </span>
             )
