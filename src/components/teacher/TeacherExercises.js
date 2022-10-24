@@ -1,19 +1,23 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Modal, Form, Button, Alert } from 'react-bootstrap';
 import { useAuth } from '../../contexts/AuthContext';
-import { addDoc, collection, deleteDoc, doc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, getDocs, doc, query, where } from "firebase/firestore";
 import { firestore } from "../../firebase";
 import { FirebaseContext } from '../../contexts/FirebaseContext';
 
 export default function TeacherExercises() {
 
     const [showForm, setShowForm] = useState(false);
+    const [showForm2, setShowForm2] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const openForm = () => setShowForm(true);
     const closeForm = () => setShowForm(false);
+    const openForm2 = () => setShowForm2(true);
+    const closeForm2 = () => setShowForm2(false);
     const exerciseRef = useRef();
     const { currentUser } = useAuth();
+    const [users, setUsers] = useState([]);
 
     const myExercises = [];
     FirebaseContext("exercises", "teacher", currentUser.email, myExercises, "exercise");
@@ -21,30 +25,50 @@ export default function TeacherExercises() {
     FirebaseContext("exercises", "teacher", currentUser.email, ids, "id");
     const exercisesRender = [];
 
-    async function deleteEx() {
+    const usersCollectionRef = collection(firestore, "users");
+    const q = query(usersCollectionRef, where("email", "==", "ma@gmail.com"), where("role", "==", "teacher"));
+    useEffect(() => {
+        const getUsers = async () => {
+            const data = await getDocs(q);
+            setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+        };
 
-        const docRef = doc(firestore, 'exercises', ids[0]);
-        deleteDoc(docRef);
+        getUsers();
+    }, []);
+
+    const deleteExercise = async (i) => {
+        const userDoc = doc(firestore, "exercises", ids[i]);
+        await deleteDoc(userDoc);
+        closeForm2();
     };
-
-    const deleteExercise = async (e) => {
-        e.preventDefault()
-        try {
-            deleteEx();
-
-        } catch (err) {
-            console.log(err);
-        }
-
-    }
 
     for (let i = 0; i < myExercises.length; i++) {
         exercisesRender.push(
-            <div className="p-2 bg-light mb-2 h-50 d-flex align-items-center">
-                <p className='col-9'>{myExercises[i]}</p>
-                <button className='btn btn-success me-2 ms-5'>Post</button>
-                <button className='btn btn-danger me-4' onClick={deleteExercise}>Delete</button>
-            </div>
+            <>
+                <div className="p-2 bg-light mb-2 h-50 d-flex align-items-center">
+                    <p className='col-9'>{myExercises[i]}</p>
+                    <button className='btn btn-success me-2 ms-5'>Post</button>
+                    <button className='btn btn-danger me-4' onClick={openForm2}>Delete</button>
+                </div>
+                <Modal centered show={showForm2} onHide={closeForm2}>
+                    <Modal.Header>
+                        <Modal.Title>Delete exercise</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form>
+                            <Form.Group>
+                                <Form.Label>Are you sure you want to delete this exercise from all your classes?</Form.Label>
+                            </Form.Group>
+                        </Form>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button onClick={closeForm2} disabled={loading} className='btn btn-light text-center'>Cancel</Button>
+                        <Button onClick={() => { deleteExercise(i); }} disabled={loading} className='btn btn-danger text-center'>Delete</Button>
+                    </Modal.Footer>
+                </Modal>
+            </>
+
+
         );
     }
 
@@ -94,6 +118,15 @@ export default function TeacherExercises() {
                     </Form>
                 </Modal.Body>
             </Modal>
+            {users.map((user) => {
+                return (
+                    <div>
+                        {" "}
+                        <h1>Name: {user.email}</h1>
+                        <h1>Age: {user.id}</h1>
+                    </div>
+                );
+            })}
         </>
     )
 }
