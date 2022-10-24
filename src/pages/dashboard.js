@@ -15,12 +15,12 @@ export default function Dashboard() {
 
 
     return (
-        <>
+        <div className="bg-image myBackground">
             {
                 user[0] === "student" ?
-                    <StudentDashboard /> : (user[0] === "teacher" ? <TeacherDashboard /> : <h1>Loading...</h1>)
+                    <StudentDashboard /> : (user[0] === "teacher" ? <TeacherDashboard /> : <h1 className='bg-light'>Loading...</h1>)
 
             }
-        </>
+        </div>
     )
 }
