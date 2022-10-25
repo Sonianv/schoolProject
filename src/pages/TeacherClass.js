@@ -110,7 +110,7 @@ export default function TeacherClass() {
                                     {solutions.map((sol) => {
                                         return (
                                             <>
-                                                <div className="p-2 bg-light mb-2 h-50 ">
+                                                <div className="p-2 bg-light mb-2 ">
                                                     <p className='col-12'>Student: {sol.student}</p>
                                                     <p className='col-12'>Exercise: {sol.exercise}</p>
                                                     <p className='col-12'>Solution: {sol.solution}</p>

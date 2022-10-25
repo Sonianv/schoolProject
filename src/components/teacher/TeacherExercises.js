@@ -80,6 +80,7 @@ export default function TeacherExercises() {
             setError('Failed to post exercise');
         }
         setLoading(false);
+        console.log(ex);
     }
 
     return (
@@ -110,6 +111,7 @@ export default function TeacherExercises() {
                                 </Modal.Body>
                                 <Modal.Footer>
                                     <Button disabled={loading} onClick={() => { postExercise(ex.exercise) }} className='w-100 btn btn-primary text-center'>Post</Button>
+
                                 </Modal.Footer>
                             </Modal>
                         </>
