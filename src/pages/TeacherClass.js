@@ -12,6 +12,7 @@ export default function TeacherClass() {
     const { currentUser } = useAuth();
     const [myClass, setMyClass] = useState([]);
     const [posts, setPosts] = useState([]);
+    const [solutions, setSolutions] = useState([]);
     const [showForm, setShowForm] = useState(false);
     const openForm = () => setShowForm(true);
     const closeForm = () => setShowForm(false);
@@ -38,6 +39,17 @@ export default function TeacherClass() {
 
         getPosts();
     }, [reducerValue]);
+
+    const solutionsCollectionRef = collection(firestore, "solutions");
+    const q3 = query(solutionsCollectionRef, where("teacher", "==", currentUser.email), where("class", "==", name));
+    useEffect(() => {
+        const getSolutions = async () => {
+            const data = await getDocs(q3);
+            setSolutions(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+        };
+
+        getSolutions();
+    }, []);
 
 
     const deletePost = async (id) => {
@@ -94,7 +106,20 @@ export default function TeacherClass() {
                             </div>
                             <div className="row bg-white">
                                 <h3 className="p-3 border bg-light title shadow-sm">Solutions</h3>
+                                <div className="d-flex flex-column p-0">
+                                    {solutions.map((sol) => {
+                                        return (
+                                            <>
+                                                <div className="p-2 bg-light mb-2 h-50 ">
+                                                    <p className='col-12'>Student: {sol.student}</p>
+                                                    <p className='col-12'>Exercise: {sol.exercise}</p>
+                                                    <p className='col-12'>Solution: {sol.solution}</p>
+                                                </div>
 
+                                            </>
+                                        );
+                                    })}
+                                </div>
                             </div>
 
                             <div className="row bg-white"></div>

@@ -18,8 +18,7 @@ export default function StudentExercises() {
     const closeForm = () => setShowForm(false);
     const solutionRef = useRef();
     const { currentUser } = useAuth();
-    console.log(name);
-    console.log(teacher);
+    const [solved, setSolved] = useState(false);
 
     const postsCollectionRef = collection(firestore, "posts");
     const q = query(postsCollectionRef, where("teacher", "==", teacher), where("class", "==", name));
@@ -48,6 +47,7 @@ export default function StudentExercises() {
                     student: currentUser.email,
                     exercise: enunt
                 });
+            setSolved(true);
             closeForm();
         } catch (err) {
             setError('Failed to post solution.');
