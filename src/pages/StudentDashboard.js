@@ -3,6 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { addDoc, collection, deleteDoc, getDocs, doc, query, where, updateDoc, getDoc } from "firebase/firestore";
 import { firestore } from "../firebase";
 import { Modal, Form, Button, Alert } from 'react-bootstrap';
+import StudentClass from '../components/student/StudentClass';
 
 export default function StudentDashboard() {
 
@@ -13,7 +14,7 @@ export default function StudentDashboard() {
     const [showForm, setShowForm] = useState(false);
     const openForm = () => setShowForm(true);
     const closeForm = () => setShowForm(false);
-    const tokenRef = useRef();
+    const tokenRef = useRef("");
 
     const userRef = collection(firestore, "users");
     const q = query(userRef, where("email", "==", currentUser.email));
@@ -53,14 +54,9 @@ export default function StudentDashboard() {
                     <div className="col-md-8 pb-4 mb-4 ">
                         {u.class ?
                             <>
-                                <div className="row bg-white">
-                                    <h3 className="p-3 border bg-light title shadow-sm">My class</h3>
-                                </div>
-                                <div className="row bg-white">
-                                    <h3 className="p-3 border bg-light title shadow-sm">Posted exercises</h3>
-
-                                </div>
-                            </> :
+                                <StudentClass />
+                            </>
+                            :
                             <>
                                 <div className="row bg-white">
                                     <h3 className="p-3 border bg-light title shadow-sm">You need to enroll in a class</h3>
