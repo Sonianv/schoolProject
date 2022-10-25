@@ -4,17 +4,15 @@ import { firestore } from "../../firebase";
 import { useAuth } from '../../contexts/AuthContext';
 import { FirebaseContext } from '../../contexts/FirebaseContext';
 import { Modal, Form, Button, Alert } from 'react-bootstrap';
+import { useNavigate } from "react-router-dom";
 
 export default function StudentClass() {
 
     const { currentUser } = useAuth();
     const [classes, setClasses] = useState([]);
     const token = [];
-    const solutionRef = useRef();
-    const [posts, setPosts] = useState();
-    const [showForm, setShowForm] = useState(false);
-    const openForm = () => setShowForm(true);
-    const closeForm = () => setShowForm(false);
+    const navigate = useNavigate();
+
     FirebaseContext("users", "email", currentUser.email, token, "class");
 
     const classesCollectionRef = collection(firestore, "classes");
@@ -28,16 +26,11 @@ export default function StudentClass() {
         getClasses();
     }, []);
 
-    // const postsCollectionRef = collection(firestore, "posts");
-    // const q2 = query(postsCollectionRef, where("teacher", "==", myClass[0].teacher), where("class", "==", myClass[0].name));
-    // useEffect(() => {
-    //     const getPosts = async () => {
-    //         const data = await getDocs(q2);
-    //         setPosts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    //     };
 
-    //     getPosts();
-    // }, []);
+    const goToExercises = async (name, teacher, e) => {
+        e.preventDefault();
+        navigate("/exercises", { state: { name: name, teacher: teacher } });
+    }
 
     return (
         <>
@@ -46,38 +39,15 @@ export default function StudentClass() {
                     <>
                         <div className="row bg-white">
                             <h3 className="p-3 border bg-light title shadow-sm">My class: {cl.name}</h3>
-                            <h3 className="p-3">Teacher: {cl.teacher}</h3>
-                        </div>
-                        <div className="row bg-white">
-                            <h3 className="p-3 border bg-light title shadow-sm">Posted exercises</h3>
-                            <div className="d-flex flex-column p-0">
-                                {/* {posts.map((post) => {
-                        return (
-                            <>
-                                <div className="p-2 bg-light mb-2 h-50 d-flex align-items-center fs-5">
-                                    <p className='col-10'>{post.exercise}</p>
-                                    <button className='btn btn-info col-1 ms-5' onClick={openForm}>Solve</button>
+                            <div className='d-flex flex-row mb-2'>
+                                <div className="d-inline p-1 bg-light hover-shadow text-white ms-1 me-1 rounded-7 class" type="button" onClick={(e) => goToExercises(cl.name, cl.teacher, e)} >
+                                    <h2 className='mt-5 greenText'>Exercises</h2>
                                 </div>
-                                <Modal centered show={showForm} onHide={closeForm}>
-                                    <Modal.Header>
-                                        <Modal.Title>Solve exercise</Modal.Title>
-                                    </Modal.Header>
-                                    <Modal.Body>
-                                        <Form>
-                                            <Form.Group>
-                                                <Form.Label className='mt-2'>Solution</Form.Label>
-                                                <textarea class="form-control" ref={solutionRef}></textarea>
-                                            </Form.Group>
-                                        </Form>
-                                    </Modal.Body>
-                                    <Modal.Footer>
-                                        <Button onClick={closeForm} className='btn btn-light text-center'>Cancel</Button>
-                                        <Button className='btn btn-danger text-center'>Post</Button>
-                                    </Modal.Footer>
-                                </Modal></>
+                                <div>
+                                    <h3 className="p-3">Teacher: {cl.teacher}</h3>
+                                    <h3 className="p-3">Description: {cl.description ? cl.description : "no description"}</h3>
+                                </div>
 
-                        );
-                    })} */}
                             </div>
                         </div>
                     </> :

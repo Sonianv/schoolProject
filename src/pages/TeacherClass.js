@@ -92,6 +92,10 @@ export default function TeacherClass() {
                                     })}
                                 </div>
                             </div>
+                            <div className="row bg-white">
+                                <h3 className="p-3 border bg-light title shadow-sm">Solutions</h3>
+
+                            </div>
 
                             <div className="row bg-white"></div>
                         </div>
