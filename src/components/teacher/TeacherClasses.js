@@ -1,9 +1,10 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect, useReducer } from 'react'
 import { Modal, Form, Button, Alert } from 'react-bootstrap';
 import { useAuth } from '../../contexts/AuthContext';
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, getDocs, doc, query, where } from "firebase/firestore";
 import { firestore } from "../../firebase";
-import { FirebaseContext } from '../../contexts/FirebaseContext';
+import { useNavigate } from "react-router-dom";
+
 
 export default function TeacherClasses() {
 
@@ -15,18 +16,20 @@ export default function TeacherClasses() {
     const nameRef = useRef();
     const descriptionRef = useRef();
     const { currentUser } = useAuth();
+    const [reducerValue, forceUpdate] = useReducer(x => x + 1, 0);
+    const [classes, setClasses] = useState([]);
+    const navigate = useNavigate();
 
-    const myClasses = [];
-    FirebaseContext("classes", "teacher", currentUser.email, myClasses, "name");
-    const classesRender = [];
+    const classesCollectionRef = collection(firestore, "classes");
+    const q = query(classesCollectionRef, where("teacher", "==", currentUser.email));
+    useEffect(() => {
+        const getClasses = async () => {
+            const data = await getDocs(q);
+            setClasses(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+        };
 
-    for (let i = 0; i < myClasses.length; i++) {
-        classesRender.push(
-            <div className="d-inline p-2 bg-light hover-shadow text-white ms-1 me-1 rounded-7 class" type="button">
-                <h2 className='mt-5 greenText'>{myClasses[i]}</h2>
-            </div>
-        );
-    }
+        getClasses();
+    }, [reducerValue]);
 
     const saveClass = async (e) => {
         e.preventDefault();
@@ -44,16 +47,27 @@ export default function TeacherClasses() {
                     teacher: currentUser.email,
                 });
             closeForm();
+            forceUpdate();
         } catch (err) {
             setError('Failed to create class');
         }
         setLoading(false);
     }
 
-    return (
+    const goToClass = async (name, e) => {
+        e.preventDefault();
+        navigate("/class", { state: { name: name } });
+    }
 
+    return (
         <div className='d-flex flex-row mb-2' role="toolbar">
-            {classesRender}
+            {classes.map((cl) => {
+                return (
+                    <div className="d-inline p-2 bg-light hover-shadow text-white ms-1 me-1 rounded-7 class" type="button" onClick={(e) => goToClass(cl.name, e)}>
+                        <h2 className='mt-5 greenText'>{cl.name}</h2>
+                    </div>
+                );
+            })}
 
             <div className="d-inline p-2 bg-light hover-shadow text-white ms-1 me-1 rounded-7 class" type="button" onClick={openForm}>
                 <h2 className='mt-4 greenText'>+ New class</h2>

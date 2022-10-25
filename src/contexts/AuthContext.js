@@ -22,6 +22,7 @@ export const AuthProvider = ({ children }) => {
                 addDoc(collection(firestore, "users"), {
                     role: role,
                     email: email,
+                    class: "",
                 });
         } catch (e) {
             console.error(e);

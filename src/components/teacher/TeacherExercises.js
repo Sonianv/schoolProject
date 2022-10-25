@@ -8,14 +8,11 @@ import { FirebaseContext } from '../../contexts/FirebaseContext';
 export default function TeacherExercises() {
 
     const [showForm, setShowForm] = useState(false);
-    const [showForm2, setShowForm2] = useState(false);
     const [showForm3, setShowForm3] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const openForm = () => setShowForm(true);
     const closeForm = () => setShowForm(false);
-    const openForm2 = () => setShowForm2(true);
-    const closeForm2 = () => setShowForm2(false);
     const openForm3 = () => setShowForm3(true);
     const closeForm3 = () => setShowForm3(false);
     const exerciseRef = useRef();
@@ -47,13 +44,6 @@ export default function TeacherExercises() {
         getClasses();
     }, []);
 
-    const deleteExercise = async (id) => {
-        const exerciseDoc = doc(firestore, "exercises", id);
-        await deleteDoc(exerciseDoc);
-        closeForm2();
-        forceUpdate();
-    };
-
     const saveExercise = async (e) => {
         e.preventDefault();
 
@@ -81,7 +71,7 @@ export default function TeacherExercises() {
         try {
             await
                 addDoc(collection(firestore, "posts"), {
-                    exerciseId: ex,
+                    exercise: ex,
                     teacher: currentUser.email,
                     class: selects
                 });
@@ -99,26 +89,9 @@ export default function TeacherExercises() {
                     return (
                         <>
                             <div className="p-2 bg-light mb-2 h-50 d-flex align-items-center">
-                                <p className='col-9'>{ex.exercise}</p>
-                                <button className='btn btn-success me-2 ms-5' onClick={openForm3}>Post</button>
-                                <button className='btn btn-danger me-4' onClick={openForm2}>Delete</button>
+                                <p className='col-10'>{ex.exercise}</p>
+                                <button className='btn btn-success col-1 ms-5' onClick={openForm3}>Post</button>
                             </div>
-                            <Modal centered show={showForm2} onHide={closeForm2}>
-                                <Modal.Header>
-                                    <Modal.Title>Delete exercise</Modal.Title>
-                                </Modal.Header>
-                                <Modal.Body>
-                                    <Form>
-                                        <Form.Group>
-                                            <Form.Label>Are you sure you want to delete this exercise from all your classes?</Form.Label>
-                                        </Form.Group>
-                                    </Form>
-                                </Modal.Body>
-                                <Modal.Footer>
-                                    <Button onClick={closeForm2} disabled={loading} className='btn btn-light text-center'>Cancel</Button>
-                                    <Button onClick={() => { deleteExercise(ex.id); }} disabled={loading} className='btn btn-danger text-center'>Delete</Button>
-                                </Modal.Footer>
-                            </Modal>
                             <Modal centered show={showForm3} onHide={closeForm3}>
                                 <Modal.Header>
                                     <Modal.Title>New class post</Modal.Title>
@@ -136,7 +109,7 @@ export default function TeacherExercises() {
                                     </Form>
                                 </Modal.Body>
                                 <Modal.Footer>
-                                    <Button disabled={loading} onClick={() => { postExercise(ex.id) }} className='w-100 btn btn-primary text-center'>Post</Button>
+                                    <Button disabled={loading} onClick={() => { postExercise(ex.exercise) }} className='w-100 btn btn-primary text-center'>Post</Button>
                                 </Modal.Footer>
                             </Modal>
                         </>
